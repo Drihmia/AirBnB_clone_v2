@@ -16,7 +16,7 @@ class HBNBCommand(cmd.Cmd):
     """ Contains the functionality for the HBNB console"""
 
     # determines prompt for interactive/non-interactive modes
-    prompt = '(hbnb) ' if sys.__stdin__.isatty() else ''
+    prompt = '(hbnb) '
 
     classes = {
                'BaseModel': BaseModel, 'User': User, 'Place': Place,
@@ -29,11 +29,6 @@ class HBNBCommand(cmd.Cmd):
              'max_guest': int, 'price_by_night': int,
              'latitude': float, 'longitude': float
             }
-
-    def preloop(self):
-        """Prints if isatty is false"""
-        if not sys.__stdin__.isatty():
-            print('(hbnb)')
 
     def precmd(self, line):
         """Reformat command line for advanced command syntax.
@@ -88,8 +83,6 @@ class HBNBCommand(cmd.Cmd):
 
     def postcmd(self, stop, line):
         """Prints if isatty is false"""
-        if not sys.__stdin__.isatty():
-            print('(hbnb) ', end='')
         return stop
 
     def do_quit(self, command):
@@ -113,7 +106,14 @@ class HBNBCommand(cmd.Cmd):
         """ Overrides the emptyline method of CMD """
         pass
 
-    def do_create(self, args):
+    def do_create(self, line):
+        # print(line)
+        args = ""
+        cls_params = line.split()
+        length = len(cls_params)
+        # print(cls_params)
+        if (length >= 1):
+            args = cls_params[0]
         """ Create an object of any class"""
         if not args:
             print("** class name missing **")
@@ -122,7 +122,28 @@ class HBNBCommand(cmd.Cmd):
             print("** class doesn't exist **")
             return
         new_instance = HBNBCommand.classes[args]()
-        storage.save()
+        if (length > 1):
+            # ------------------ Important ----------------------------
+            # 34 for double, 8221 for right double quotes
+            params = cls_params[1:]
+            for param in params:
+                # print(param)
+                key, value = param.split("=")
+                if (value.startswith(chr(8221)) or value.startswith(chr(34))):
+                    value = value[1:-1].replace("_", " ")
+                    if (chr(8221) in value):
+                        v = value
+                        value = v.replace(chr(8221), chr((92)) + chr((8221)))
+                    elif (chr(34) in value):
+                        value = value.replace(chr(34), chr((92)) + chr((34)))
+                    setattr(new_instance, key, value)
+                elif ("." in value):
+                    value = float(value)
+                    setattr(new_instance, key, value)
+                elif (is_int(value)):
+                    value = int(value)
+                    setattr(new_instance, key, value)
+
         print(new_instance.id)
         storage.save()
 
@@ -319,6 +340,14 @@ class HBNBCommand(cmd.Cmd):
         """ Help information for the update class """
         print("Updates an object with new information")
         print("Usage: update <className> <id> <attName> <attVal>\n")
+
+
+def is_int(num):
+    try:
+        int(num)
+        return True
+    except (ValueError, TypeError) as f:
+        return False
 
 
 if __name__ == "__main__":
