@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 """This module defines a class to manage file storage for hbnb clone"""
 import json
+from pathlib import Path
 
 
 class FileStorage:
@@ -10,6 +11,7 @@ class FileStorage:
 
     def all(self, cls=None):
         """Returns a dictionary of models currently in storage"""
+        # print("-+-+-+-+", self.__objects, "-+-++-+-+")
         __dict_objects = {}
         if cls:
             items = FileStorage.__objects.items()
@@ -19,7 +21,6 @@ class FileStorage:
                     __dict_objects[i] = j
         else:
             __dict_objects = FileStorage.__objects
-
         return __dict_objects
 
     def new(self, obj):
@@ -37,14 +38,6 @@ class FileStorage:
 
     def reload(self):
         """Loads storage dictionary from file"""
-        from models.base_model import BaseModel
-        from models.user import User
-        from models.place import Place
-        from models.state import State
-        from models.city import City
-        from models.amenity import Amenity
-        from models.review import Review
-        from pathlib import Path
 
         """
         deserializes the JSON file to __objects (only if the JSON file
@@ -52,10 +45,6 @@ class FileStorage:
         exist, no exception should be raised)
         """
         if Path(self.__file_path).is_file():
-            class_dict = {"BaseModel": BaseModel, "User": User,
-                          "State": State, "City": City, "Amenity": Amenity,
-                          "Place": Place, "Review": Review
-                          }
             # I've replaced it with mine - DRIHMIA
             # previous implimentation, when the file is present and
             # it is empty, the console raise Errors.
@@ -65,6 +54,20 @@ class FileStorage:
                 except Exception as e:
                     red = ""
                 if red != "":
+                    # Adding importation to the point where I really need it
+                    # to avoid circulare importation
+                    from models.base_model import BaseModel
+                    from models.user import User
+                    from models.place import Place
+                    from models.state import State
+                    from models.city import City
+                    from models.amenity import Amenity
+                    from models.review import Review
+                    class_dict = {"BaseModel": BaseModel, "User": User,
+                                  "State": State, "City": City,
+                                  "Amenity": Amenity,
+                                  "Place": Place, "Review": Review
+                                  }
                     dicts = json.loads(red)
                     for k, v in dicts.items():
                         for key in class_dict.keys():

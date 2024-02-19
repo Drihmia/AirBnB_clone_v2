@@ -154,7 +154,6 @@ class HBNBCommand(cmd.Cmd):
     def do_show(self, args):
         """ Method to show an individual object """
         from models.base_model import BaseModel
-        from models.__init__ import storage
         from models.user import User
         from models.place import Place
         from models.state import State
@@ -188,7 +187,9 @@ class HBNBCommand(cmd.Cmd):
 
         key = c_name + "." + c_id
         try:
-            print(storage._FileStorage__objects[key])
+            from models.__init__ import storage
+            # for i in storage.all(key).values():
+            [print(i) for i in storage.all(key).values()]
         except KeyError:
             print("** no instance found **")
 
@@ -265,12 +266,11 @@ class HBNBCommand(cmd.Cmd):
             if args not in classes:
                 print("** class doesn't exist **")
             else:
-                print("-------------", type(storage.all()), "-----------------------------")
                 for k, v in storage.all().items():
                     if k.split('.')[0] == args:
                         print_list.append(str(v))
         else:
-            for k, v in storage.all():
+            for v in storage.all().values():
                 print_list.append(str(v))
 
         print(print_list)
@@ -282,8 +282,9 @@ class HBNBCommand(cmd.Cmd):
 
     def do_count(self, args):
         """Count current number of class instances"""
+        from models.__init__ import storage
         count = 0
-        for k, v in storage._FileStorage__objects.items():
+        for k in storage.all():
             if args == k.split('.')[0]:
                 count += 1
         print(count)
