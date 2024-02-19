@@ -28,7 +28,7 @@ class test_fileStorage(unittest.TestCase):
             if (os.path.exists(self.backup_file)):
                 shutil.move(self.backup_file, 'file.json')
             # os.remove('file.json.backup')
-        except:
+        except Exception as e:
             print("not done")
             pass
 
@@ -133,7 +133,6 @@ class test_fileStorage(unittest.TestCase):
             with patch('builtins.open', return_value=open('file.json', 'w+')):
                 storage.reload()
 
-
     def test_reload_nonexistent_file(self):
         """Reload should return None if file does not exist"""
         self.assertIsNone(storage.reload())
@@ -164,6 +163,7 @@ class test_fileStorage(unittest.TestCase):
         storage.reload()
         loaded = storage.all().values()
         self.assertEqual(len(loaded), 1)
+
 
 if __name__ == '__main__':
     unittest.main()
