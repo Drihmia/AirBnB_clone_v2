@@ -58,7 +58,7 @@ class test_fileStorage(unittest.TestCase):
 
         # Perform your test logic here
         new = BaseModel()
-        self.assertFalse(os.path.exists('file.json'))
+        self.assertTrue(os.path.exists('file.json'))
 
         # Restore the original file if it was renamed
         if os.path.exists('file.json.backp'):

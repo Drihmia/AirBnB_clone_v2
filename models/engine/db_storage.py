@@ -14,6 +14,7 @@ class DBStorage:
         url = 'mysql+mysqldb://{}:{}@{}/{}'
 
         from os import environ
+
         USER = environ.get("HBNB_MYSQL_USER")
         PASSWD = environ.get("HBNB_MYSQL_PWD")
         HOST = environ.get("HBNB_MYSQL_HOST")
@@ -26,6 +27,7 @@ class DBStorage:
             from models.city import City
             from models.amenity import Amenity
             from models.review import Review
+
             self.__engine = create_engine(url.format(USER, PASSWD, HOST, DB),
                                           pool_pre_ping=True)
             # print(self.__engine)
@@ -43,6 +45,7 @@ class DBStorage:
         from models.city import City
         from models.amenity import Amenity
         from models.review import Review
+
         _class_dict = {"BaseModel": BaseModel, "User": User,
                        "State": State, "City": City, "Amenity": Amenity,
                        "Place": Place, "Review": Review
@@ -99,6 +102,7 @@ class DBStorage:
         if self.__engine is not None:
             from sqlalchemy.orm import sessionmaker, scoped_session
             from models.base_model import Base
+
             Base.metadata.create_all(bind=self.__engine)
             s = sessionmaker(bind=self.__engine, expire_on_commit=False)
             self.__session = scoped_session(s)
