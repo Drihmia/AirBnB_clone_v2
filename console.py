@@ -101,6 +101,7 @@ class HBNBCommand(cmd.Cmd):
         from models.city import City
         from models.amenity import Amenity
         from models.review import Review
+        from os import environ
         classes = {
                    'BaseModel': BaseModel, 'User': User, 'Place': Place,
                    'State': State, 'City': City, 'Amenity': Amenity,
@@ -120,7 +121,9 @@ class HBNBCommand(cmd.Cmd):
         elif args not in classes:
             print("** class doesn't exist **")
             return
+        # print("-------", args, classes[args], "---")
         new_instance = classes[args]()
+        # print("+++++++++++++++++++++++2")
         if (length > 1):
             # ------------------ Important ----------------------------
             # 34 for double, 8221 for right double quotes
@@ -144,6 +147,9 @@ class HBNBCommand(cmd.Cmd):
                     setattr(new_instance, key, value)
 
         print(new_instance.id)
+        # print("_____", environ.get("HBNB_TYPE_STORAGE"), "______")
+        if (environ.get("HBNB_TYPE_STORAGE") == "db"):
+            storage.new(new_instance)
         storage.save()
 
     def help_create(self):

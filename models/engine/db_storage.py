@@ -11,7 +11,7 @@ class DBStorage:
     def __init__(self):
         """ intantiation method for new engine"""
 
-        url = 'mysql+mysqldb://{}:{}@{}:3306/{}'
+        url = 'mysql+mysqldb://{}:{}@{}/{}'
 
         from os import environ
         USER = environ.get("HBNB_MYSQL_USER")
@@ -20,8 +20,16 @@ class DBStorage:
         DB = environ.get("HBNB_MYSQL_DB")
         if self.__engine is None:
             from sqlalchemy import create_engine
+            from models.user import User
+            from models.place import Place
+            from models.state import State
+            from models.city import City
+            from models.amenity import Amenity
+            from models.review import Review
             self.__engine = create_engine(url.format(USER, PASSWD, HOST, DB),
                                           pool_pre_ping=True)
+            # print(self.__engine)
+
             if (environ.get("HBNB_ENV") == "test"):
                 from models.base_model import Base
                 Base.metadata.__engine.drop_all()
@@ -41,35 +49,42 @@ class DBStorage:
                        }
         if cls:
             if cls in _class_dict:
-                if DBStorage.__session:
-                    return DBStorage.__session().query(_class_dict[cls])
+                if self.__session:
+                    return self.__session().query(_class_dict[cls])
         else:
             clas_dic = {}
-            with DBStorage.__session() as sess:
+            with self.__session() as sess:
                 for clas in _class_dict:
-                    if DBStorage.__session:
-                        print("++++++++++", _class_dict[clas], type(clas))
-                        quer = sess.query(State).all()
-                        print("+++++++++++++++++++++", "++++++++++++++++++++")
-                        print("++++++++++++++++", type(quer), quer, "++++++++")
-                        clas_dic.update({clas: quer})
+                    if self.__session:
+                        # print("++++++++++", _class_dict[clas], type(clas))
+                        try:
+                            query = sess.query(_class_dict[clas]).all()
+                            for quer in query:
+                                clas_dic.update({clas + "." + quer.id: quer})
+                        except Exception as f:
+                            pass
+            print("-----", clas_dic, "------")
             return clas_dic
 
     def new(self, obj):
         """add the object to the current database session"""
-        if DBStorage.__session:
-            DBStorage.__session.add(obj)
+        if self.__session:
+            # with self.__session() as session:
+            # print("-----", "new   :  ", session, "-------------")
+            self.__session.add(obj)
 
     def save(self):
         """commit all changes of the current database session"""
-        if DBStorage.__session:
-            DBStorage.__session.commit()
+        if self.__session:
+            # with self.__session() as session:
+            self.__session.commit()
 
     def delete(self, obj=None):
         """ delete from the current database session obj if not None"""
         if obj:
-            if DBStorage.__session:
-                DBStorage.__session.delete(obj)
+            if self.__session:
+                with self.__session() as session:
+                    session.delete(obj)
 
     def reload(self):
         """
@@ -80,6 +95,7 @@ class DBStorage:
         if self.__engine is not None:
             from sqlalchemy.orm import sessionmaker, scoped_session
             from models.base_model import Base
-            Base.metadata.create_all(self.__engine)
+            Base.metadata.create_all(bind=self.__engine)
             s = sessionmaker(bind=self.__engine, expire_on_commit=False)
-            DBStorage.__session = scoped_session(s)
+            self.__session = scoped_session(s)
+            # print("-----", "reload:  ", self.__session, "-------------")
