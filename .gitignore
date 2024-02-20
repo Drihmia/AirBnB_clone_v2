@@ -1,0 +1,6 @@
+*~
+*.pyc
+*#
+file.json
+__pycache__
+test_params_create
