@@ -13,7 +13,8 @@ class State(BaseModel, Base):
     name = Column(String(128), nullable=False)
     if environ.get("HBNB_TYPE_STORAGE") == "db":
         cities = relationship("City", backref="state",
-                          cascade="all, delete-orphan")
+                              cascade="all, delete-orphan")
+
     @property
     def cities(self):
         from models.city import City

@@ -6,6 +6,7 @@ from os import environ
 
 
 if environ.get("HBNB_TYPE_STORAGE") == "db":
+    # print("we are in the db storage")
     storage = DBStorage()
 else:
     storage = FileStorage()
