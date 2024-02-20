@@ -48,23 +48,27 @@ class DBStorage:
                        "Place": Place, "Review": Review
                        }
         if cls:
-            if cls in _class_dict:
+            clas_dic = {}
+            with self.__session() as sess:
                 if self.__session:
-                    return self.__session().query(_class_dict[cls])
+                    try:
+                        query = sess.query(_class_dict[cls]).all()
+                        for quer in query:
+                            clas_dic.update({cls + "." + quer.id: quer})
+                    except Exception as f:
+                        pass
         else:
             clas_dic = {}
             with self.__session() as sess:
                 for clas in _class_dict:
                     if self.__session:
-                        # print("++++++++++", _class_dict[clas], type(clas))
                         try:
                             query = sess.query(_class_dict[clas]).all()
                             for quer in query:
                                 clas_dic.update({clas + "." + quer.id: quer})
                         except Exception as f:
                             pass
-            print("-----", clas_dic, "------")
-            return clas_dic
+        return clas_dic
 
     def new(self, obj):
         """add the object to the current database session"""
