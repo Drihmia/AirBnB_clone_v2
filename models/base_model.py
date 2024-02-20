@@ -4,6 +4,7 @@ import uuid
 from datetime import datetime
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import (Column, String, DateTime)
+from os import environ
 
 
 Base = declarative_base()
@@ -31,10 +32,12 @@ class BaseModel:
                                                      '%Y-%m-%dT%H:%M:%S.%f')
             kwargs['created_at'] = datetime.strptime(kwargs['created_at'],
                                                      '%Y-%m-%dT%H:%M:%S.%f')
-            del kwargs['__class__']
+            if '__class__' in kwargs:
+                del kwargs['__class__']
             # print("*****************", kwargs, "***********************")
             self.__dict__.update(kwargs)
-        # self.save()
+        if environ.get("HBNB_TYPE_STORAGE") != "db":
+            self.save()
 
     def __str__(self):
         """Returns a string representation of the instance"""
