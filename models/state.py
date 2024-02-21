@@ -14,15 +14,15 @@ class State(BaseModel, Base):
     if environ.get("HBNB_TYPE_STORAGE") == "db":
         cities = relationship("City", backref="state",
                               cascade="all, delete-orphan")
+    else:
+        @property
+        def cities(self):
+            from models.city import City
+            from models import storage
 
-    @property
-    def cities(self):
-        from models.city import City
-        from models import storage
+            list_cities_state_id = []
+            for city in storage.all(City):
+                if (city.state_id == self.id):
+                    list_cities_state_id.append(city)
 
-        list_cities_state_id = []
-        for city in storage.all(City):
-            if (city.state_id == self.id):
-                list_cities_state_id.append(city)
-
-        return list_cities_state_id
+            return list_cities_state_id
