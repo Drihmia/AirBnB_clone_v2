@@ -35,9 +35,9 @@ class BaseModel:
             if '__class__' in kwargs:
                 del kwargs['__class__']
             self.__dict__.update(kwargs)
-        # if environ.get("HBNB_TYPE_STORAGE") != "db":
-        # from models import storage
-        # storage.new(self)
+        if environ.get("HBNB_TYPE_STORAGE") != "db":
+            from models import storage
+            storage.new(self)
 
     def __str__(self):
         """Returns a string representation of the instance"""
