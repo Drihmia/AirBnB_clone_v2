@@ -25,6 +25,7 @@ class Place(BaseModel, Base):
     if environ.get("HBNB_TYPE_STORAGE") == "db":
         reviews = relationship("Review", backref="place",
                                cascade="all, delete-orphan")
+
     @property
     def reviews(self):
         from models.review import Review

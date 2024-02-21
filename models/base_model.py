@@ -36,9 +36,9 @@ class BaseModel:
                 del kwargs['__class__']
             # print("*****************", kwargs, "***********************")
             self.__dict__.update(kwargs)
-        if environ.get("HBNB_TYPE_STORAGE") != "db":
-            from models import storage
-            storage.new(self)
+        # if environ.get("HBNB_TYPE_STORAGE") != "db":
+        # from models import storage
+        # storage.new(self)
 
     def __str__(self):
         """Returns a string representation of the instance"""
@@ -65,6 +65,7 @@ class BaseModel:
                            (str(type(self)).split('.')[-1]).split('\'')[0]})
         dictionary['created_at'] = self.created_at.isoformat()
         dictionary['updated_at'] = self.updated_at.isoformat()
+
         if "_sa_instance_state" in dictionary:
             del dictionary["_sa_instance_state"]
 
