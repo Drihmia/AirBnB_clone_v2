@@ -17,6 +17,10 @@ class State(BaseModel, Base):
     else:
         @property
         def cities(self):
+            """
+            returns the list of City instances with state_id
+            equals to the current State.id
+            """
             from models.city import City
             from models import storage
 

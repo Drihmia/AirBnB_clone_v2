@@ -123,11 +123,7 @@ class HBNBCommand(cmd.Cmd):
             print("** class doesn't exist **")
             return
         # print("-------", args, classes[args], "---")
-        if (environ.get("HBNB_TYPE_STORAGE") == "db"):
-            if (length > 1):
-                new_instance = classes[args]()
-        else:
-            new_instance = classes[args]()
+        new_instance = classes[args]()
         # print("+++++++++++++++++++++++2")
         if (length > 1):
             # ------------------ Important ----------------------------
@@ -151,14 +147,9 @@ class HBNBCommand(cmd.Cmd):
                     value = int(value)
                     setattr(new_instance, key, value)
 
-        if (environ.get("HBNB_TYPE_STORAGE") == "db"):
-            if(length > 1):
-                print(new_instance.id)
-                storage.new(new_instance)
-                storage.save()
-        else:
-            print(new_instance.id)
-            storage.save()
+        print(new_instance.id)
+        storage.new(new_instance)
+        storage.save()
 
     def help_create(self):
         """ Help information for the create method """

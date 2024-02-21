@@ -35,9 +35,6 @@ class BaseModel:
             if '__class__' in kwargs:
                 del kwargs['__class__']
             self.__dict__.update(kwargs)
-        if environ.get("HBNB_TYPE_STORAGE") != "db":
-            from models import storage
-            storage.new(self)
 
     def __str__(self):
         """Returns a string representation of the instance"""
@@ -53,8 +50,7 @@ class BaseModel:
         """Updates updated_at with current time when instance is changed"""
         from models import storage
         self.updated_at = datetime.now()
-        if environ.get("HBNB_TYPE_STORAGE") == "db":
-            storage.new(self)
+        storage.new(self)
         storage.save()
 
     def to_dict(self):
@@ -69,18 +65,14 @@ class BaseModel:
         if "_sa_instance_state" in dictionary:
             del dictionary["_sa_instance_state"]
 
-        # I ve added this one manually, It should be handled in the
-        # line 33 above ( normally) but it does print anyway
-        if "__class__" in dictionary:
-            del dictionary["__class__"]
         return dictionary
 
     def delete(self):
-        from models import storage
         """
         A method to delete the current instance from the storage
         (models.storage)
         """
+        from models import storage
 
         # it may need some fix, not sure
         storage.delete(self)

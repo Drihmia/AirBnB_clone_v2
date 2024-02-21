@@ -11,7 +11,7 @@ class DBStorage:
     def __init__(self):
         """ intantiation method for new engine"""
 
-        url = 'mysql+mysqldb://{}:{}@{}/{}'
+        url = 'mysql+mysqldb://{}:{}@{}:3306/{}'
 
         from os import environ
 
@@ -50,25 +50,24 @@ class DBStorage:
                        "State": State, "City": City, "Amenity": Amenity,
                        "Place": Place, "Review": Review
                        }
+        clas_dic = {}
         if cls:
-            clas_dic = {}
             with self.__session() as sess:
                 if self.__session:
                     try:
                         query = sess.query(_class_dict[cls]).all()
-                        for quer in query:
-                            clas_dic.update({cls + "." + quer.id: quer})
+                        for obj in query:
+                            clas_dic.update({cls + "." + obj.id: obj})
                     except Exception as f:
                         pass
         else:
-            clas_dic = {}
             with self.__session() as sess:
                 for clas in _class_dict:
                     if self.__session:
                         try:
                             query = sess.query(_class_dict[clas]).all()
-                            for quer in query:
-                                clas_dic.update({clas + "." + quer.id: quer})
+                            for obj in query:
+                                clas_dic.update({clas + "." + obj.id: obj})
                         except Exception as f:
                             pass
         return clas_dic
@@ -78,7 +77,8 @@ class DBStorage:
         if self.__session:
             # with self.__session() as session:
             # print("-----", "new   :  ", session, "-------------")
-            self.__session.add(obj)
+            if obj:
+                self.__session.add(obj)
 
     def save(self):
         """commit all changes of the current database session"""
