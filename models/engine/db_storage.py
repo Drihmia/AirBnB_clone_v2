@@ -51,25 +51,19 @@ class DBStorage:
                        "Place": Place, "Review": Review
                        }
         clas_dic = {}
+        query = []
         if cls:
             with self.__session() as sess:
                 if self.__session:
-                    try:
-                        query = sess.query(_class_dict[cls]).all()
-                        for obj in query:
-                            clas_dic.update({cls + "." + obj.id: obj})
-                    except Exception as f:
-                        pass
+                    query = sess.query(_class_dict[cls]).all()
         else:
             with self.__session() as sess:
-                for clas in _class_dict:
+                for cls in _class_dict:
                     if self.__session:
-                        try:
-                            query = sess.query(_class_dict[clas]).all()
-                            for obj in query:
-                                clas_dic.update({clas + "." + obj.id: obj})
-                        except Exception as f:
-                            pass
+                        query.extend(sess.query(_class_dict[cls]).all())
+
+        for obj in query:
+            clas_dic.update({type(obj).__name__ + "." + obj.id: obj})
         return clas_dic
 
     def new(self, obj):

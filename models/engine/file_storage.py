@@ -25,7 +25,7 @@ class FileStorage:
 
     def new(self, obj):
         """Adds new object to storage dictionary"""
-        self.all().update({type(obj).__name__ + '.' + obj.id: obj})
+        FileStorage.__objects.update({type(obj).__name__ + '.' + obj.id: obj})
 
     def save(self):
         """Saves storage dictionary to file"""
@@ -84,3 +84,4 @@ class FileStorage:
             key = type(obj).__name__ + "." + obj.id
             if key in FileStorage.__objects:
                 del FileStorage.__objects[key]
+        self.save()
