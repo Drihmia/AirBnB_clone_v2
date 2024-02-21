@@ -34,7 +34,6 @@ class BaseModel:
                                                      '%Y-%m-%dT%H:%M:%S.%f')
             if '__class__' in kwargs:
                 del kwargs['__class__']
-            # print("*****************", kwargs, "***********************")
             self.__dict__.update(kwargs)
         # if environ.get("HBNB_TYPE_STORAGE") != "db":
         # from models import storage
