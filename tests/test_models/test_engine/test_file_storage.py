@@ -29,7 +29,7 @@ class test_fileStorage(unittest.TestCase):
                 shutil.move(self.backup_file, 'file.json')
             # os.remove('file.json.backup')
         except Exception as e:
-            print("not done")
+            # print("not done")
             pass
 
     def test_obj_list_empty(self):
