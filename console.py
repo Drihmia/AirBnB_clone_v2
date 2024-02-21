@@ -286,7 +286,7 @@ class HBNBCommand(cmd.Cmd):
             for v in storage.all().values():
                 print_list.append(str(v))
         if print_list:
-            print("[" + " ".join(print_list) + "]")
+            print("[" + ", ".join(print_list) + "]")
             # for element in print_list:
             # print(print_list)
 

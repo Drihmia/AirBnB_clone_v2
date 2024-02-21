@@ -42,9 +42,10 @@ class BaseModel:
     def __str__(self):
         """Returns a string representation of the instance"""
         # print("I am in the str magic method of basemodel")
-        # cls = (str(type(self)).split('.')[-1]).split('\'')[0]
-        # return '[{}] ({}) {}'.format(cls, self.id, self.__dict__)
-        return f"[{type(self).__name__}] ({self.id}) {self.to_dict()}"
+        cls = (str(type(self)).split('.')[-1]).split('\'')[0]
+        print(str(type(self)))
+        return '[{}] ({}) {}'.format(cls, self.id, self.__dict__)
+        # return f"[{type(self).__name__}] ({self.id}) {self.to_dict()}"
 
     def save(self):
         """Updates updated_at with current time when instance is changed"""
