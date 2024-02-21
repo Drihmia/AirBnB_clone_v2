@@ -25,15 +25,14 @@ class Place(BaseModel, Base):
     if environ.get("HBNB_TYPE_STORAGE") == "db":
         reviews = relationship("Review", backref="place",
                                cascade="all, delete-orphan")
-    else:
-        @property
-        def cities(self):
-            from models.review import Review
-            from models import storage
+    @property
+    def reviews(self):
+        from models.review import Review
+        from models import storage
 
-            list_reviews_place_id = []
-            for review in storage.all(Review):
-                if (Review.state_id == self.id):
-                    list_reviews_place_id.append(review)
+        list_reviews_place_id = []
+        for review in storage.all(Review):
+            if (Review.state_id == self.id):
+                list_reviews_place_id.append(review)
 
-            return list_reviews_place_id
+        return list_reviews_place_id
