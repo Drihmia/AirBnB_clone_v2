@@ -37,14 +37,17 @@ class BaseModel:
             # print("*****************", kwargs, "***********************")
             self.__dict__.update(kwargs)
         if environ.get("HBNB_TYPE_STORAGE") != "db":
-            self.save()
+            from models import storage
+            storage.new(self)
 
     def __str__(self):
         """Returns a string representation of the instance"""
         # print("I am in the str magic method of basemodel")
         cls = (str(type(self)).split('.')[-1]).split('\'')[0]
-        print(str(type(self)))
-        return '[{}] ({}) {}'.format(cls, self.id, self.__dict__)
+        dictio = self.__dict__
+        if ("_sa_instance_state" in dictio):
+            del dictio["_sa_instance_state"]
+        return '[{}] ({}) {}'.format(cls, self.id, dictio)
         # return f"[{type(self).__name__}] ({self.id}) {self.to_dict()}"
 
     def save(self):
