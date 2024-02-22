@@ -34,7 +34,7 @@ class DBStorage:
 
             if (environ.get("HBNB_ENV") == "test"):
                 from models.base_model import Base
-                Base.metadata.__engine.drop_all()
+                Base.metadata.drop_all(bind=self.__engine)
 
     def all(self, cls=None):
         """query on the current database session"""
@@ -60,7 +60,10 @@ class DBStorage:
             with self.__session() as sess:
                 for cls in _class_dict:
                     if self.__session:
-                        query.extend(sess.query(_class_dict[cls]).all())
+                        try:
+                            query.extend(sess.query(_class_dict[cls]).all())
+                        except Exception as f:
+                            pass
 
         for obj in query:
             clas_dic.update({type(obj).__name__ + "." + obj.id: obj})

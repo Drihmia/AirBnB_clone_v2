@@ -93,6 +93,11 @@ class HBNBCommand(cmd.Cmd):
         pass
 
     def do_create(self, line):
+        """ a method that create a new instance
+        handle also the syntax:
+
+        ex: create User name="redouane"
+        """
         from models.__init__ import storage
         from models.base_model import BaseModel
         from models.user import User
@@ -402,6 +407,7 @@ class HBNBCommand(cmd.Cmd):
 
 
 def is_int(num):
+    """a function that return true if num is int"""
     try:
         int(num)
         return True

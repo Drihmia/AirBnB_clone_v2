@@ -28,28 +28,38 @@ class BaseModel:
             self.updated_at = datetime.utcnow()
             # print("*****************", kwargs, "*****************")
         else:
-            kwargs['updated_at'] = datetime.strptime(kwargs['updated_at'],
-                                                     '%Y-%m-%dT%H:%M:%S.%f')
-            kwargs['created_at'] = datetime.strptime(kwargs['created_at'],
-                                                     '%Y-%m-%dT%H:%M:%S.%f')
+            if ('updated_at' in kwargs):
+                kwargs['updated_at'] = datetime.strptime(kwargs['updated_at'],
+                                                         '%Y-%m-%dT%H:%M:%S.%f'
+                                                         )
+            if ('created_at' in kwargs):
+                kwargs['created_at'] = datetime.strptime(kwargs['created_at'],
+                                                         '%Y-%m-%dT%H:%M:%S.%f'
+                                                         )
             if '__class__' in kwargs:
                 del kwargs['__class__']
             self.__dict__.update(kwargs)
+            if not self.id:
+                self.id = str(uuid.uuid4())
 
     def __str__(self):
         """Returns a string representation of the instance"""
         # print("I am in the str magic method of basemodel")
         cls = (str(type(self)).split('.')[-1]).split('\'')[0]
         dictio = self.__dict__
-        if ("_sa_instance_state" in dictio):
-            del dictio["_sa_instance_state"]
+        # if ("_sa_instance_state" in dictio):
+        # del dictio["_sa_instance_state"]
         return '[{}] ({}) {}'.format(cls, self.id, dictio)
         # return f"[{type(self).__name__}] ({self.id}) {self.to_dict()}"
 
     def save(self):
         """Updates updated_at with current time when instance is changed"""
         from models import storage
-        self.updated_at = datetime.now()
+        if environ.get("HBNB_TYPE_STORAGE") == "db":
+            self.updated_at = datetime.utcnow()
+        else:
+            self.updated_at = datetime.now()
+        # print("from basemodel----:  ",self)
         storage.new(self)
         storage.save()
 
@@ -59,8 +69,10 @@ class BaseModel:
         dictionary.update(self.__dict__)
         dictionary.update({'__class__':
                            (str(type(self)).split('.')[-1]).split('\'')[0]})
-        dictionary['created_at'] = self.created_at.isoformat()
-        dictionary['updated_at'] = self.updated_at.isoformat()
+        if ('created_at' in dictionary):
+            dictionary['created_at'] = self.created_at.isoformat()
+        if ('updated_at' in dictionary):
+            dictionary['updated_at'] = self.updated_at.isoformat()
 
         if "_sa_instance_state" in dictionary:
             del dictionary["_sa_instance_state"]
