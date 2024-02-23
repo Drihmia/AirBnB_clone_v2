@@ -49,3 +49,10 @@ place_2.amenities.append(amenity_3)
 storage.save()
 
 print("OK")
+
+print("try to delete an object user")
+
+storage.delete(state)
+storage.save()
+# storage.drop_all()
+# storage.save()

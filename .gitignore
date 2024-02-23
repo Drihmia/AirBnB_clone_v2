@@ -1,5 +1,6 @@
 *~
 *.pyc
+*main*
 *#
 file.json
 __pycache__

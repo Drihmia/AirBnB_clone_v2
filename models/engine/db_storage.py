@@ -1,5 +1,12 @@
 #!/usr/bin/python3
 """New engine DBStorage"""
+from models.base_model import BaseModel
+from models.user import User
+from models.place import Place
+from models.state import State
+from models.city import City
+from models.amenity import Amenity
+from models.review import Review
 
 
 class DBStorage:
@@ -10,23 +17,15 @@ class DBStorage:
 
     def __init__(self):
         """ intantiation method for new engine"""
-
-        url = 'mysql+mysqldb://{}:{}@{}:3306/{}'
-
         from os import environ
 
+        url = 'mysql+mysqldb://{}:{}@{}/{}'
         USER = environ.get("HBNB_MYSQL_USER")
         PASSWD = environ.get("HBNB_MYSQL_PWD")
         HOST = environ.get("HBNB_MYSQL_HOST")
         DB = environ.get("HBNB_MYSQL_DB")
         if self.__engine is None:
             from sqlalchemy import create_engine
-            from models.user import User
-            from models.place import Place
-            from models.state import State
-            from models.city import City
-            from models.amenity import Amenity
-            from models.review import Review
 
             self.__engine = create_engine(url.format(USER, PASSWD, HOST, DB),
                                           pool_pre_ping=True)
@@ -38,13 +37,6 @@ class DBStorage:
 
     def all(self, cls=None):
         """query on the current database session"""
-        from models.base_model import BaseModel
-        from models.user import User
-        from models.place import Place
-        from models.state import State
-        from models.city import City
-        from models.amenity import Amenity
-        from models.review import Review
 
         _class_dict = {"BaseModel": BaseModel, "User": User,
                        "State": State, "City": City, "Amenity": Amenity,
@@ -53,17 +45,16 @@ class DBStorage:
         clas_dic = {}
         query = []
         if cls:
-            with self.__session as sess:
-                if self.__session:
-                    query = sess.query(_class_dict[cls]).all()
+            if self.__session:
+                query = self.__session.query(_class_dict[cls]).all()
         else:
-            with self.__session as sess:
-                for cls in _class_dict:
-                    if self.__session:
-                        try:
-                            query.extend(sess.query(_class_dict[cls]).all())
-                        except Exception as f:
-                            pass
+            for cls in _class_dict:
+                if self.__session:
+                    try:
+                        _dic = _class_dict
+                        query.extend(self.__session.query(_dic[cls]).all())
+                    except Exception as f:
+                        pass
 
         for obj in query:
             clas_dic.update({type(obj).__name__ + "." + obj.id: obj})
@@ -71,16 +62,13 @@ class DBStorage:
 
     def new(self, obj):
         """add the object to the current database session"""
-        if self.__session:
-            # with self.__session() as session:
-            # print("-----", "new   :  ", session, "-------------")
-            if obj:
+        if obj:
+            if self.__session:
                 self.__session.add(obj)
 
     def save(self):
         """commit all changes of the current database session"""
         if self.__session:
-            # with self.__session() as session:
             self.__session.commit()
 
     def delete(self, obj=None):

@@ -13,19 +13,16 @@ Base = declarative_base()
 class BaseModel:
     """A base class for all hbnb models"""
 
-    id = Column(String(60), primary_key=True,
-                nullable=False, unique=True)
-    created_at = Column(DateTime, nullable=False,
-                        default=datetime.utcnow())
-    updated_at = Column(DateTime, nullable=False,
-                        default=datetime.utcnow())
+    id = Column(String(60), primary_key=True, nullable=False, unique=True)
+    created_at = Column(DateTime, nullable=False, default=datetime.utcnow())
+    updated_at = Column(DateTime, nullable=False, default=datetime.utcnow())
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *_, **kwargs):
         """Instatntiates a new model"""
         if not kwargs:
             self.id = str(uuid.uuid4())
-            self.created_at = datetime.utcnow()
-            self.updated_at = datetime.utcnow()
+            self.created_at = datetime.now()
+            self.updated_at = datetime.now()
             # print("*****************", kwargs, "*****************")
         else:
             if ('updated_at' in kwargs):
@@ -47,10 +44,7 @@ class BaseModel:
         # print("I am in the str magic method of basemodel")
         cls = (str(type(self)).split('.')[-1]).split('\'')[0]
         dictio = self.__dict__
-        # if ("_sa_instance_state" in dictio):
-        # del dictio["_sa_instance_state"]
         return '[{}] ({}) {}'.format(cls, self.id, dictio)
-        # return f"[{type(self).__name__}] ({self.id}) {self.to_dict()}"
 
     def save(self):
         """Updates updated_at with current time when instance is changed"""
@@ -59,7 +53,6 @@ class BaseModel:
             self.updated_at = datetime.utcnow()
         else:
             self.updated_at = datetime.now()
-        # print("from basemodel----:  ",self)
         storage.new(self)
         storage.save()
 
