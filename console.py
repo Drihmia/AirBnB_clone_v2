@@ -1,6 +1,19 @@
 #!/usr/bin/env python3
 """ Console Module """
 import cmd
+from models import storage
+from models.base_model import BaseModel
+from models.user import User
+from models.place import Place
+from models.state import State
+from models.city import City
+from models.amenity import Amenity
+from models.review import Review
+classes = {
+           'BaseModel': BaseModel, 'User': User, 'Place': Place,
+           'State': State, 'City': City, 'Amenity': Amenity,
+           'Review': Review
+           }
 
 
 class HBNBCommand(cmd.Cmd):
@@ -98,20 +111,6 @@ class HBNBCommand(cmd.Cmd):
 
         ex: create User name="redouane"
         """
-        from models import storage
-        from models.base_model import BaseModel
-        from models.user import User
-        from models.place import Place
-        from models.state import State
-        from models.city import City
-        from models.amenity import Amenity
-        from models.review import Review
-        from os import environ
-        classes = {
-                   'BaseModel': BaseModel, 'User': User, 'Place': Place,
-                   'State': State, 'City': City, 'Amenity': Amenity,
-                   'Review': Review
-                   }
         # print(line)
         args = ""
         # new_instance = ""
@@ -164,18 +163,6 @@ class HBNBCommand(cmd.Cmd):
 
     def do_show(self, args):
         """ Method to show an individual object """
-        from models.base_model import BaseModel
-        from models.user import User
-        from models.place import Place
-        from models.state import State
-        from models.city import City
-        from models.amenity import Amenity
-        from models.review import Review
-        classes = {
-                   'BaseModel': BaseModel, 'User': User, 'Place': Place,
-                   'State': State, 'City': City, 'Amenity': Amenity,
-                   'Review': Review
-                   }
         new = args.partition(" ")
         c_name = new[0]
         c_id = new[2]
@@ -211,19 +198,6 @@ class HBNBCommand(cmd.Cmd):
 
     def do_destroy(self, args):
         """ Destroys a specified object """
-        from models.base_model import BaseModel
-        from models import storage
-        from models.user import User
-        from models.place import Place
-        from models.state import State
-        from models.city import City
-        from models.amenity import Amenity
-        from models.review import Review
-        classes = {
-                   'BaseModel': BaseModel, 'User': User, 'Place': Place,
-                   'State': State, 'City': City, 'Amenity': Amenity,
-                   'Review': Review
-                   }
         new = args.partition(" ")
         c_name = new[0]
         c_id = new[2]
@@ -257,19 +231,6 @@ class HBNBCommand(cmd.Cmd):
 
     def do_all(self, args):
         """ Shows all objects, or all objects of a class"""
-        from models.base_model import BaseModel
-        from models import storage
-        from models.user import User
-        from models.place import Place
-        from models.state import State
-        from models.city import City
-        from models.amenity import Amenity
-        from models.review import Review
-        classes = {
-                   'BaseModel': BaseModel, 'User': User, 'Place': Place,
-                   'State': State, 'City': City, 'Amenity': Amenity,
-                   'Review': Review
-                   }
         print_list = []
 
         if args:
@@ -307,19 +268,6 @@ class HBNBCommand(cmd.Cmd):
 
     def do_update(self, args):
         """ Updates a certain object with new info """
-        from models.base_model import BaseModel
-        from models import storage
-        from models.user import User
-        from models.place import Place
-        from models.state import State
-        from models.city import City
-        from models.amenity import Amenity
-        from models.review import Review
-        classes = {
-                   'BaseModel': BaseModel, 'User': User, 'Place': Place,
-                   'State': State, 'City': City, 'Amenity': Amenity,
-                   'Review': Review
-                   }
         c_name = c_id = att_name = att_val = kwargs = ''
 
         # isolate cls from id/args, ex: (<cls>, delim, <id/args>)

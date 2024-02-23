@@ -1,12 +1,14 @@
 #!/usr/bin/python3
 """New engine DBStorage"""
-from models.base_model import BaseModel
+from models.base_model import BaseModel, Base
 from models.user import User
 from models.place import Place
 from models.state import State
 from models.city import City
 from models.amenity import Amenity
 from models.review import Review
+from sqlalchemy import create_engine
+from os import environ
 
 
 class DBStorage:
@@ -17,23 +19,19 @@ class DBStorage:
 
     def __init__(self):
         """ intantiation method for new engine"""
-        from os import environ
 
         url = 'mysql+mysqldb://{}:{}@{}/{}'
         USER = environ.get("HBNB_MYSQL_USER")
         PASSWD = environ.get("HBNB_MYSQL_PWD")
         HOST = environ.get("HBNB_MYSQL_HOST")
         DB = environ.get("HBNB_MYSQL_DB")
-        if self.__engine is None:
-            from sqlalchemy import create_engine
 
-            self.__engine = create_engine(url.format(USER, PASSWD, HOST, DB),
-                                          pool_pre_ping=True)
-            # print(self.__engine)
+        self.__engine = create_engine(url.format(USER, PASSWD, HOST, DB),
+                                      pool_pre_ping=True)
 
-            if (environ.get("HBNB_ENV") == "test"):
-                from models.base_model import Base
-                Base.metadata.drop_all(bind=self.__engine)
+        if (environ.get("HBNB_ENV") == "test"):
+            from models.base_model import Base
+            Base.metadata.drop_all(bind=self.__engine)
 
     def all(self, cls=None):
         """query on the current database session"""
@@ -83,16 +81,14 @@ class DBStorage:
         create the current database session (self.__session) from the engine
         """
 
-        if self.__engine is not None:
-            from sqlalchemy.orm import sessionmaker, scoped_session
-            from models.base_model import Base
+        from sqlalchemy.orm import sessionmaker, scoped_session
+        from models.base_model import Base
 
-            Base.metadata.create_all(bind=self.__engine)
-            s = sessionmaker(bind=self.__engine, expire_on_commit=False)
-            self.__session = scoped_session(s)()
-            # print("-----", "reload:  ", self.__session, "-------------")
+        Base.metadata.create_all(bind=self.__engine)
+        s = sessionmaker(bind=self.__engine, expire_on_commit=False)
+        self.__session = scoped_session(s)()
+        # print("-----", "reload:  ", self.__session, "-------------")
 
     def drop_all(self):
         """drop all tables from my sql database"""
-        from models.base_model import Base
         Base.metadata.drop_all(bind=self.__engine)

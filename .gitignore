@@ -1,7 +1,8 @@
 *~
 *.pyc
 *main*
-*#
+main*
+*
 file.json
 __pycache__
 test_params_create
