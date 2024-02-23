@@ -98,7 +98,7 @@ class HBNBCommand(cmd.Cmd):
 
         ex: create User name="redouane"
         """
-        from models.__init__ import storage
+        from models import storage
         from models.base_model import BaseModel
         from models.user import User
         from models.place import Place
@@ -128,6 +128,7 @@ class HBNBCommand(cmd.Cmd):
             print("** class doesn't exist **")
             return
         # print("-------", args, classes[args], "---")
+        # print("!!!!!!!!!!!!!!!!", args, "!!!!!!!!!!!!!!")
         new_instance = classes[args]()
         # print("+++++++++++++++++++++++2")
         if (length > 1):
@@ -197,7 +198,7 @@ class HBNBCommand(cmd.Cmd):
 
         key = c_name + "." + c_id
         try:
-            from models.__init__ import storage
+            from models import storage
             # for i in storage.all(key).values():
             [print(i) for i in storage.all(key).values()]
         except KeyError:
@@ -211,7 +212,7 @@ class HBNBCommand(cmd.Cmd):
     def do_destroy(self, args):
         """ Destroys a specified object """
         from models.base_model import BaseModel
-        from models.__init__ import storage
+        from models import storage
         from models.user import User
         from models.place import Place
         from models.state import State
@@ -257,7 +258,7 @@ class HBNBCommand(cmd.Cmd):
     def do_all(self, args):
         """ Shows all objects, or all objects of a class"""
         from models.base_model import BaseModel
-        from models.__init__ import storage
+        from models import storage
         from models.user import User
         from models.place import Place
         from models.state import State
@@ -293,7 +294,7 @@ class HBNBCommand(cmd.Cmd):
 
     def do_count(self, args):
         """Count current number of class instances"""
-        from models.__init__ import storage
+        from models import storage
         count = 0
         for k in storage.all():
             if args == k.split('.')[0]:
@@ -307,7 +308,7 @@ class HBNBCommand(cmd.Cmd):
     def do_update(self, args):
         """ Updates a certain object with new info """
         from models.base_model import BaseModel
-        from models.__init__ import storage
+        from models import storage
         from models.user import User
         from models.place import Place
         from models.state import State

@@ -53,11 +53,11 @@ class DBStorage:
         clas_dic = {}
         query = []
         if cls:
-            with self.__session() as sess:
+            with self.__session as sess:
                 if self.__session:
                     query = sess.query(_class_dict[cls]).all()
         else:
-            with self.__session() as sess:
+            with self.__session as sess:
                 for cls in _class_dict:
                     if self.__session:
                         try:
@@ -87,8 +87,7 @@ class DBStorage:
         """ delete from the current database session obj if not None"""
         if obj:
             if self.__session:
-                with self.__session() as session:
-                    session.delete(obj)
+                self.__session.delete(obj)
 
     def reload(self):
         """
@@ -102,5 +101,10 @@ class DBStorage:
 
             Base.metadata.create_all(bind=self.__engine)
             s = sessionmaker(bind=self.__engine, expire_on_commit=False)
-            self.__session = scoped_session(s)
+            self.__session = scoped_session(s)()
             # print("-----", "reload:  ", self.__session, "-------------")
+
+    def drop_all(self):
+        """drop all tables from my sql database"""
+        from models.base_model import Base
+        Base.metadata.drop_all(bind=self.__engine)
