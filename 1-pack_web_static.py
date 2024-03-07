@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-
 """ This module contains the do_pack function using Fabric module"""
 from fabric.api import local
 from os import path, mkdir
