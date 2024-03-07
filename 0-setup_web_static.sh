@@ -55,6 +55,8 @@ chown -R ubuntu:ubuntu "/data/"
 new_str="server_name _;\n\tlocation \/hbnb_static\/ {\n\t\talias \/data\/web_static\/current\/;\n\t}"
 nginx_config="/etc/nginx/sites-available/default"
 
-sed -i 's/server_name _;/'"$new_str"'/'  $nginx_config
+if ! grep -q "location /hbnb_static/" "$nginx_config"; then
+	sed -i 's/server_name _;/'"$new_str"'/'  "$nginx_config"
+fi
 
 nginx -s reload
