@@ -14,11 +14,9 @@ def do_deploy(archive_path):
     distributes an archive to your web servers, using the function
     do_deploy"""
 
+    if not path.exists(archive_path):
+        return False
     try:
-        if not path.exists(archive_path):
-            print("does not")
-            return False
-
         # isolating the file name
         file_name = path.basename(archive_path)
 
