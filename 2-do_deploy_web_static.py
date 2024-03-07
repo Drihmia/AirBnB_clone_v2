@@ -22,11 +22,11 @@ def do_deploy(archive_path):
 
         # target name and file name with no exstention
         file_name_no_ext = file_name.split(".")[0]
-        path_target = f"/data/web_static/releases/{file_name_no_ext}/"
+        path_target = f"/data/web_static/releases/{file_name_no_ext}"
 
         # upload the file name to servers
         tmp_dest = f"/tmp/{file_name}"
-        put(archive_path, tmp_dest)
+        put(archive_path, "/tmp/")
 
         # creating the path if it does not exist
         if not path.exists(""):
@@ -44,10 +44,10 @@ def do_deploy(archive_path):
         run(f"rm {tmp_dest}")
 
         # mv the content from target/web_static to target/
-        run(f"mv -n {path_target}web_static/* {path_target}")
+        run(f"mv {path_target}/web_static/* {path_target}")
 
         # remove the old directory
-        run(f"rm -rf {path_target}web_static")
+        run(f"rm -rf {path_target}/web_static")
         # remove the symbolic link
         smblc_link = "/data/web_static/current"
         run("rm -rf {}".format(smblc_link))
