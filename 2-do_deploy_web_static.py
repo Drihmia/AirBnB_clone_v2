@@ -24,7 +24,7 @@ def do_deploy(archive_path):
 
     # upload the file name to servers
     tmp_dest = f"/tmp/{file_name}"
-    put(archive_path, "/tmp/")
+    put(archive_path, "/tmp")
 
     # creating the path if it does not exist
     run_mkdir_cmd = f"mkdir -p {path_target}"
@@ -41,7 +41,7 @@ def do_deploy(archive_path):
     run(f"rm {tmp_dest}")
 
     # mv the content from target/web_static to target/
-    run(f"mv {path_target}/web_static/* {path_target}")
+    run(f"mv {path_target}/web_static/* {path_target}/")
 
     # remove the old directory
     run(f"rm -rf {path_target}/web_static")
@@ -50,9 +50,6 @@ def do_deploy(archive_path):
     run("rm -rf {}".format(smblc_link))
 
     # recreate symblic link
-    run(f"ln -sf {path_target} {smblc_link}")
-
-    # reload nginx so the new changes will take effect
-    # run("sudo nginx -s reload")
+    run(f"ln -sf {path_target}/ {smblc_link}")
 
     return True
