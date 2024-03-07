@@ -9,7 +9,6 @@
 # 6. Update Nginx configuration to serve the content of /data/web_static/current/ to hbnb_static
 #    Don't forget to restart Nginx after updating the configuration
 
-apt-get -y update
 
 # check if nginx is install otherwise install it
 if ! which nginx >/dev/null 2>&1; then
