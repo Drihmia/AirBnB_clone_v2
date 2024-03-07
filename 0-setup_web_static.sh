@@ -60,3 +60,5 @@ if ! grep -q "location /hbnb_static/" "$nginx_config"; then
 fi
 
 nginx -s reload
+
+exit 0
