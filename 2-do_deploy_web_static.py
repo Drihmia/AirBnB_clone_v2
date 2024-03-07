@@ -6,6 +6,7 @@ from os import path
 
 env.hosts = ["100.26.168.177", "54.237.107.28"]
 env.user = "ubuntu"
+env.key_filename = "~/.ssh/school"
 
 
 def do_deploy(archive_path):
@@ -15,6 +16,7 @@ def do_deploy(archive_path):
 
     try:
         if not path.exists(archive_path):
+            print("does not")
             return False
 
         # isolating the file name
@@ -47,9 +49,9 @@ def do_deploy(archive_path):
         run(f"mv -n {path_target}web_static/* {path_target}")
 
         # remove the old directory
-        run(f"rm -rf {path_target}web_static/")
+        run(f"rm -rf {path_target}web_static")
         # remove the symbolic link
-        smblc_link = "/data/web_static/current/"
+        smblc_link = "/data/web_static/current"
         run("rm -rf {}".format(smblc_link))
 
         # recreate symblic link
