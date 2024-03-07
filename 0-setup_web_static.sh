@@ -30,7 +30,13 @@ direct="/data/web_static/releases/test"
 if [ -d "$direct/" ];
 then
 	touch -m 755 "$direct/index.html"
-	echo "Hello from NGINX server" > "$direct/index.html"
+	echo "<html>
+  <head>
+  <\/head>
+  <body>
+    Holberton School
+  <\/body>
+<\/html>" > "$direct/index.html"
 	# chmod 755 "$direct/index.html"
 
 fi
