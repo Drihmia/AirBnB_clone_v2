@@ -57,7 +57,6 @@ def do_deploy(archive_path):
 
         # reload nginx so the new changes will take effect
         # run("sudo nginx -s reload")
-        print("New version deployed!")
 
         return True
     except Exception as f:
