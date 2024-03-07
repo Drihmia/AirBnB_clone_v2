@@ -18,17 +18,19 @@ def do_pack():
     time = current_datetime.strftime("%Y%m%d%H%M%S")
 
     # archiving the files in web_static directory
-    archive_name = "versions/web_static_{}.tgz".format(time)
+    archive_path = "versions/web_static_{}.tgz".format(time)
 
     # announecement for packing
-    packing = "Packing web_static to {}".format(archive_name)
+    packing = "Packing web_static to {}".format(archive_path)
     print(packing)
 
     # executing the tar command
-    cmd_archive = "tar -cvzf {} web_static".format(archive_name)
+    cmd_archive = "tar -cvzf {} web_static".format(archive_path)
     local(cmd_archive)
 
-    size = path.getsize(archive_name)
+    size = path.getsize(archive_path)
     # announecement for being packed
-    packed = "web_static packed: {} -> {}Bytes".format(archive_name, size)
+    packed = "web_static packed: {} -> {}Bytes".format(archive_path, size)
     print(packed)
+
+    return archive_path
