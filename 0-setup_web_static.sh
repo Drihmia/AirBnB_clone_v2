@@ -10,7 +10,11 @@
 #    Don't forget to restart Nginx after updating the configuration
 
 apt-get -y update
-apt-get -y install nginx
+
+# check if nginx is install otherwise install it
+if ! which nginx >/dev/null 2>&1; then
+	apt-get -y install nginx
+fi
 
 list_directories=("/data/" "/data/web_static/" "/data/web_static/releases/" "/data/web_static/shared/" "/data/web_static/releases/test/")
 
@@ -18,12 +22,7 @@ list_directories=("/data/" "/data/web_static/" "/data/web_static/releases/" "/da
 for dir in "${list_directories[@]}";
 do
 	if [ ! -d "$dir" ]; then
-		if mkdir -m 755 "$dir";
-		then
-			echo "-- done creating $dir"
-		fi
-	else
-		echo "-- $dir does exist"
+		mkdir -m 755 "$dir"
 	fi
 done
 
@@ -31,11 +30,9 @@ done
 direct="/data/web_static/releases/test"
 if [ -d "$direct/" ];
 then
-	touch -m 666 "$direct/index.html"
-	if echo "Hello from NGINX server" > "$direct/index.html"; then
-		echo "-- fake html has been created"
-	fi
-	chmod 755 "$direct/index.html"
+	touch -m 755 "$direct/index.html"
+	echo "Hello from NGINX server" > "$direct/index.html"
+	# chmod 755 "$direct/index.html"
 
 fi
 
@@ -44,41 +41,20 @@ distination="/data/web_static/current"
 source="/data/web_static/releases/test/"
 
 if [ -L "$distination" ]; then
-	echo "-- symbolic link $distination already exist"
-	echo "-- remove it"
-	if rm "$distination"; then
-		echo "-- symbolic has been removed"
-	else
-		echo "-- failed to remove the symbolic link"
-		exit 1
-	fi
-	echo "-- create it"
-	if ln -s "$source"  "$distination"; then
-		echo "-- symbolic link has been successfully created"
-	else
-		echo "-- failed to create the symbolic link"
-	fi
+	rm "$distination"
+	ln -s "$source"  "$distination"
 else
-	echo "-- creating the inexistent link"
-	if ln -s "$source"  "$distination"; then
-		echo "-- symbolic link has been successfully created"
-	else
-		echo "-- failed to create the symbolic link1"
-	fi
+	ln -s "$source"  "$distination"
 fi
 
 # Give ownership of the /data/ folder to the ubuntu user AND group
-echo "-- test chowm"
-if chown -R ubuntu:ubuntu "/data/"; then
-	echo "-- the change owner has been done successfully"
-else
-	echo "-- changing owner: something went wrong"
-fi
+chown -R ubuntu:ubuntu "/data/"
 
 # Update nginx configuration te serve new content under /hbnb_static
 
 new_str="server_name _;\n\tlocation \/hbnb_static\/ {\n\t\talias \/data\/web_static\/current\/;\n\t}"
+nginx_config="/etc/nginx/sites-available/default"
 
-sed -i 's/server_name _;/'"$new_str"'/' /etc/nginx/sites-available/default
+sed -i 's/server_name _;/'"$new_str"'/'  $nginx_config
 
 nginx -s reload
