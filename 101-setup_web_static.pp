@@ -1,77 +1,73 @@
-# puppet manifest to set up web servers for the deployment of web_static
+# File: 101-setup_web_static.pp
 
-# ensure nginx package is installed
+# Install Nginx package
 package { 'nginx':
   ensure => installed,
 }
 
-# define necessary directories
+# Define directories to be created
 $directories = [
-  '/data/',
-  '/data/web_static/',
-  '/data/web_static/releases/',
-  '/data/web_static/shared/',
-  '/data/web_static/releases/test/',
+  '/data',
+  '/data/web_static',
+  '/data/web_static/releases',
+  '/data/web_static/shared',
+  '/data/web_static/releases/test',
 ]
 
-# create necessary directories
-$directories.each |$dir| {
-  file { $dir:
-    ensure => directory,
-    mode   => '0755',
-    owner  => 'ubuntu',
-    group  => 'ubuntu',
-  }
+# Create necessary directories
+file { $directories:
+  ensure => directory,
+  owner  => 'ubuntu',
+  group  => 'ubuntu',
+  mode   => '0755',
 }
 
-# create a fake html file for testing
+# Create a fake HTML file
 file { '/data/web_static/releases/test/index.html':
-  ensure  => present,
-  content => '<html>
-  <head>
-  </head>
-  <body>
-    holberton school
-  </body>
-</html>',
-  mode    => '0755',
+  ensure  => file,
   owner   => 'ubuntu',
   group   => 'ubuntu',
+  content => '<html><head><title>Test Page</title></head><body><h1>This is a test page.</h1></body></html>',
 }
 
-# create or update symbolic link
+# Create a symbolic link
 file { '/data/web_static/current':
-  ensure  => link,
-  target  => '/data/web_static/releases/test/',
-  require => File['/data/web_static/releases/test/'],
+  ensure => link,
+  target => '/data/web_static/releases/test',
+  force  => true,
+  owner  => 'ubuntu',
+  group  => 'ubuntu',
 }
 
-# update nginx configuration
-$file_contents = file('/etc/nginx/sites-available/default').content
-if !($file_contents =~ /location \/hbnb_static\//) {
-  file_line { 'nginx_hbnb_static_location':
-    path  => '/etc/nginx/sites-available/default',
-    line  => '  location /hbnb_static/ {',
-    match => '^server_name _;$',
-  }
 
-  file_line { 'nginx_hbnb_static_alias':
-    path  => '/etc/nginx/sites-available/default',
-    line  => '    alias /data/web_static/current/;',
-    after => '  location /hbnb_static/ {',
-  }
+# Update Nginx configuration
+file { '/etc/nginx/sites-available/default':
+  ensure  => file,
+  content => @(EOF),
+    # Nginx configuration
+    
+    server {
+        listen 80 default_server;
+        listen [::]:80 default_server;
+
+        server_name _;
+
+        root /var/www/html;
+
+        location /hbnb_static/ {
+            alias /data/web_static/current/;
+        }
+    }
+  EOF
+
+  require => Package['nginx'],
+  notify  => Service['nginx'],
 }
 
-# reload nginx service
+
+# Define Nginx service
 service { 'nginx':
-  ensure  => running,
-  enable  => true,
-  require => File_line['nginx_hbnb_static_location', 'nginx_hbnb_static_alias'],
-  notify  => Exec['nginx_reload'],
-}
-
-exec { 'nginx_reload':
-  command     => 'nginx -s reload',
-  refreshonly => true,
+  ensure => running,
+  enable => true,
 }
 
