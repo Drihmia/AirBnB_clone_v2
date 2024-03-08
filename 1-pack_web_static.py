@@ -4,6 +4,9 @@ from fabric.api import local
 from os import path, mkdir
 from datetime import datetime
 
+current_datetime = datetime.now()
+time = current_datetime.strftime("%Y%m%d%H%M%S")
+
 
 def do_pack():
     """a Fabric script that generates a .tgz archive from the contents
@@ -12,9 +15,6 @@ def do_pack():
     try:
         if not path.exists("versions/"):
             mkdir("versions/")
-
-        current_datetime = datetime.now()
-        time = current_datetime.strftime("%Y%m%d%H%M%S")
 
         # archiving the files in web_static directory
         archive_path = "versions/web_static_{}.tgz".format(time)

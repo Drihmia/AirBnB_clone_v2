@@ -13,7 +13,9 @@ def do_deploy(archive_path):
     distributes an archive to your web servers, using the function
     do_deploy"""
 
-    if not path.exists(archive_path):
+    if not path.exists(archive_path) or not ("web" in archive_path):
+        return False
+    if not ("tgz" in archive_path):
         return False
 
     file_name = path.basename(archive_path)
@@ -41,7 +43,7 @@ def do_deploy(archive_path):
     run(f"rm {tmp_dest}")
 
     # mv the content from target/web_static to target/
-    run(f"mv {path_target}/web_static/* {path_target}/")
+    run(f"mv -n {path_target}/web_static/* {path_target}/")
 
     # remove the old directory
     run(f"rm -rf {path_target}/web_static")
@@ -50,6 +52,6 @@ def do_deploy(archive_path):
     run("rm -rf {}".format(smblc_link))
 
     # recreate symblic link
-    run(f"ln -sf {path_target}/ {smblc_link}")
+    run(f"ln -s {path_target}/ {smblc_link}")
 
     return True
