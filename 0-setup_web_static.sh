@@ -64,6 +64,7 @@ if ! grep -q "location /hbnb_static/" "$nginx_config"; then
 	sed -i 's/server_name _;/'"$new_str"'/'  "$nginx_config"
 fi
 
+nginx -s start 
 nginx -s reload
 
 exit 0
