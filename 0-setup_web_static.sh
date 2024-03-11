@@ -11,7 +11,7 @@
 
 
 # check if nginx is install otherwise install it
-if ! which nginx >/dev/null 2>&1; then
+if ! command -v nginx >/dev/null 2>&1; then
 	apt-get -y install nginx
 fi
 
@@ -32,11 +32,11 @@ then
 	touch -m 755 "$direct/index.html"
 	echo "<html>
   <head>
-  <\/head>
+  </head>
   <body>
     Holberton School
-  <\/body>
-<\/html>" > "$direct/index.html"
+  </body>
+</html>" > "$direct/index.html"
 	# chmod 755 "$direct/index.html"
 
 fi
@@ -55,15 +55,24 @@ fi
 # Give ownership of the /data/ folder to the ubuntu user AND group
 chown -R ubuntu:ubuntu "/data/"
 
-# Update nginx configuration te serve new content under /hbnb_static
+# Update nginx configuration te serve new content under /hbnb_static/
 
-new_str="server_name _;\n\tlocation \/hbnb_static\/ {\n\t\talias \/data\/web_static\/current\/;\n\t}"
+hbnb_static_f_str="server_name _;\n\tlocation \/hbnb_static\/ {\n\t\talias \/data\/web_static\/current\/;\n\t}"
 nginx_config="/etc/nginx/sites-available/default"
 
-if ! grep -q "location /hbnb_static/" "$nginx_config"; then
-	sed -i 's/server_name _;/'"$new_str"'/'  "$nginx_config"
+if ! grep -q "location /hbnb_static/ " "$nginx_config"; then
+	sed -i 's/server_name _;/'"$hbnb_static_f_str"'/'  "$nginx_config"
+fi
+# Update nginx configuration te serve new content under /hbnb_static
+
+hbnb_static_str="server_name _;\n\tlocation \/hbnb_static {\n\t\treturn 301 \/hbnb_static\/;\n\t}"
+nginx_config="/etc/nginx/sites-available/default"
+
+if ! grep -q "location /hbnb_static " "$nginx_config"; then
+	sed -i 's/server_name _;/'"$hbnb_static_str"'/'  "$nginx_config"
 fi
 
-nginx -s restart 
+
+nginx -s reload
 
 exit 0
