@@ -55,6 +55,7 @@ fi
 # Give ownership of the /data/ folder to the ubuntu user AND group
 chown -R ubuntu:ubuntu "/data/"
 
+
 # Update nginx configuration te serve new content under /hbnb_static/
 
 hbnb_static_f_str="server_name _;\n\tlocation \/hbnb_static\/ {\n\t\talias \/data\/web_static\/current\/;\n\t}"
@@ -63,16 +64,15 @@ nginx_config="/etc/nginx/sites-available/default"
 if ! grep -q "location /hbnb_static/ " "$nginx_config"; then
 	sed -i 's/server_name _;/'"$hbnb_static_f_str"'/'  "$nginx_config"
 fi
-# Update nginx configuration te serve new content under /hbnb_static
+## Update nginx configuration te serve new content under /hbnb_static
 
-hbnb_static_str="server_name _;\n\tlocation \/hbnb_static {\n\t\treturn 301 \/hbnb_static\/;\n\t}"
-nginx_config="/etc/nginx/sites-available/default"
+#hbnb_static_str="server_name _;\n\tlocation \/hbnb_static {\n\t\treturn 301 \/hbnb_static\/;\n\t}"
+#nginx_config="/etc/nginx/sites-available/default"
 
-if ! grep -q "location /hbnb_static " "$nginx_config"; then
-	sed -i 's/server_name _;/'"$hbnb_static_str"'/'  "$nginx_config"
-fi
+#if ! grep -q "location /hbnb_static " "$nginx_config"; then
+	#sed -i 's/server_name _;/'"$hbnb_static_str"'/'  "$nginx_config"
+#fi
 
-
-nginx -s reload
+service nginx restart
 
 exit 0
