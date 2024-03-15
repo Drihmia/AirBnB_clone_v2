@@ -22,6 +22,15 @@ file { $directories:
   mode   => '0755',
 }
 
+# change owner to ubuntu
+file { '/data':
+  ensure  => directory,
+  owner   => 'ubuntu',
+  group   => 'ubuntu',
+  recurse => true,
+  require => File['/data/web_static/current'],
+}
+
 # Create a fake HTML file
 file { '/data/web_static/releases/test/index.html':
   ensure  => file,

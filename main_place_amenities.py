@@ -52,7 +52,7 @@ print("OK")
 
 print("try to delete an object user")
 
-storage.delete(state)
-storage.save()
+# storage.delete(state)
+# storage.save()
 # storage.drop_all()
 # storage.save()

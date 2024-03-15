@@ -73,6 +73,6 @@ fi
 	#sed -i 's/server_name _;/'"$hbnb_static_str"'/'  "$nginx_config"
 #fi
 
-service ngnix restart
+service nginx restart
 
 exit 0
