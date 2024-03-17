@@ -38,20 +38,21 @@ def do_deploy(archive_path):
     # creating the path if it does not exist.
     run_mkdir_cmd = f"mkdir -p {path_target}"
     run(run_mkdir_cmd)
+    run("sudo chown -R ubuntu:ubuntu /data/")
 
     # Uncompress the archive to the folder
     # /data/web_static/releases/web_static_20240317155811
     # on the web server
     with cd(path_target):
-        print("pwd: ", run("pwd"))
-        run_tar_cmd = f"sudo tar -xzf {tmp_file} -C ."
+        # print("pwd: ", run("pwd"))
+        run_tar_cmd = f"tar -xzf {tmp_file} -C ."
         run(run_tar_cmd)
 
     # remove the temporary file from /tmp directory in the server(s)
     run(f"sudo rm {tmp_file}")
 
     # mv the content from target/web_static to target/
-    run(f"sudo mv -n {path_target}/web_static/* {path_target}/")
+    run(f"mv -n {path_target}/web_static/* {path_target}/")
 
     # remove the old directory
     run(f"sudo rm -rf {path_target}/web_static")
@@ -60,6 +61,6 @@ def do_deploy(archive_path):
     run("sudo rm -rf {}".format(smblc_link))
 
     # recreate symblic link
-    run(f"sudo ln -s {path_target}/ {smblc_link}")
+    run(f"ln -sf {path_target}/ {smblc_link}")
 
     return True
