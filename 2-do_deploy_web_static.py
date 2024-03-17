@@ -1,11 +1,12 @@
 #!/usr/bin/python3
 """ This module contains the do_deploy function using Fabric module"""
-from fabric.api import run, put, env
+from fabric.api import run, put, env, cd
 from os import path
 
 env.hosts = ["100.26.168.177", "54.237.107.28"]
+# , "54.237.107.28"
 env.user = "ubuntu"
-# env.key_filename = "~/.ssh/school"
+env.key_filename = "~/.ssh/school"
 
 
 def do_deploy(archive_path):
@@ -18,40 +19,47 @@ def do_deploy(archive_path):
     if not ("tgz" in archive_path):
         return False
 
+    # file name would be like this, as example:
+    # file name:  web_static_20240317155811.tgz
     file_name = path.basename(archive_path)
 
-    # target name and file name with no exstention
+    # target name and file name with no exstention, it would be sth like:
+    # path target: /data/web_static/releases/web_static_20240317155811
     file_name_no_ext = file_name.split(".")[0]
     path_target = f"/data/web_static/releases/{file_name_no_ext}"
 
-    # upload the file name to servers
-    tmp_dest = f"/tmp/{file_name}"
+    # upload the file name to servers, it would be sth like:
+    # tmp dest:  /tmp/web_static_20240317155811.tgz
+    tmp_file = f"/tmp/{file_name}"
+
+    # upload the tgz file from local to servers.
     put(archive_path, "/tmp")
 
-    # creating the path if it does not exist
+    # creating the path if it does not exist.
     run_mkdir_cmd = f"mkdir -p {path_target}"
     run(run_mkdir_cmd)
 
-    # mouve
     # Uncompress the archive to the folder
-    # /data/web_static/releases/ <archive filename without extension>
+    # /data/web_static/releases/web_static_20240317155811
     # on the web server
-    run_tar_cmd = f"tar -xzf /tmp/{file_name} -C {path_target}"
-    run(run_tar_cmd)
+    with cd(path_target):
+        print("pwd: ", run("pwd"))
+        run_tar_cmd = f"sudo tar -xzf {tmp_file} -C ."
+        run(run_tar_cmd)
 
-    # remove the temporary file from /tmp/ directory in the server(s)
-    run(f"rm {tmp_dest}")
+    # remove the temporary file from /tmp directory in the server(s)
+    run(f"sudo rm {tmp_file}")
 
     # mv the content from target/web_static to target/
-    run(f"mv -n {path_target}/web_static/* {path_target}/")
+    run(f"sudo mv -n {path_target}/web_static/* {path_target}/")
 
     # remove the old directory
-    run(f"rm -rf {path_target}/web_static")
+    run(f"sudo rm -rf {path_target}/web_static")
     # remove the symbolic link
     smblc_link = "/data/web_static/current"
-    run("rm -rf {}".format(smblc_link))
+    run("sudo rm -rf {}".format(smblc_link))
 
     # recreate symblic link
-    run(f"ln -s {path_target}/ {smblc_link}")
+    run(f"sudo ln -s {path_target}/ {smblc_link}")
 
     return True
