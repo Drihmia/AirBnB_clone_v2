@@ -3,7 +3,7 @@
 from fabric.api import run, put, env, cd
 from os import path
 
-env.hosts = ["100.26.168.177", "54.237.107.28"]
+env.hosts = ["100.26.168.177"]
 # , "54.237.107.28"
 env.user = "ubuntu"
 env.key_filename = "~/.ssh/school"
@@ -40,22 +40,25 @@ def do_deploy(archive_path):
     run(run_mkdir_cmd)
     run("sudo chown -R ubuntu:ubuntu /data/")
 
+    # remove old resources: files and directories, before extrating and moving
+    # with cd(path_target):
+    # run("rm -rf *")
+
     # Uncompress the archive to the folder
     # /data/web_static/releases/web_static_20240317155811
     # on the web server
-    with cd(path_target):
-        # print("pwd: ", run("pwd"))
-        run_tar_cmd = f"tar -xzf {tmp_file} -C ."
-        run(run_tar_cmd)
+    run_tar_cmd = f"tar -xzf {tmp_file} -C {path_target}"
+    run(run_tar_cmd)
 
     # remove the temporary file from /tmp directory in the server(s)
     run(f"sudo rm {tmp_file}")
 
     # mv the content from target/web_static to target/
-    run(f"mv -n {path_target}/web_static/* {path_target}/")
+    run(f"cp -rf {path_target}/web_static/* {path_target}/")
 
     # remove the old directory
     run(f"sudo rm -rf {path_target}/web_static")
+
     # remove the symbolic link
     smblc_link = "/data/web_static/current"
     run("sudo rm -rf {}".format(smblc_link))
