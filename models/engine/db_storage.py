@@ -36,21 +36,17 @@ class DBStorage:
     def all(self, cls=None):
         """query on the current database session"""
 
-        _class_dict = {"BaseModel": BaseModel, "User": User,
-                       "State": State, "City": City, "Amenity": Amenity,
-                       "Place": Place, "Review": Review
-                       }
         clas_dic = {}
         query = []
         if cls:
             if self.__session:
-                query = self.__session.query(_class_dict[cls]).all()
+                query = self.__session.query(cls).all()
         else:
-            for cls in _class_dict:
+            classes = [BaseModel, User, State, City, Amenity, Place, Review]
+            for cls in classes:
                 if self.__session:
                     try:
-                        _dic = _class_dict
-                        query.extend(self.__session.query(_dic[cls]).all())
+                        query.extend(self.__session.query(cls).all())
                     except Exception as f:
                         pass
 
@@ -92,3 +88,8 @@ class DBStorage:
     def drop_all(self):
         """drop all tables from my sql database"""
         Base.metadata.drop_all(bind=self.__engine)
+
+    def close(self):
+        """method on the private session attribute (self.__session)"""
+        from sqlalchemy.orm import scoped_session
+        self.__session.close()

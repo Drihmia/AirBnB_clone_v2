@@ -184,10 +184,10 @@ class HBNBCommand(cmd.Cmd):
             return
 
         key = c_name + "." + c_id
+        
         try:
             from models import storage
-            # for i in storage.all(key).values():
-            [print(i) for i in storage.all(key).values()]
+            [print(i) for i in storage.all(classes[key]).values()]
         except KeyError:
             print("** no instance found **")
 
@@ -219,7 +219,7 @@ class HBNBCommand(cmd.Cmd):
         key = c_name + "." + c_id
 
         try:
-            del(storage.all()[key])
+            del(storage.all()[classes[key]])
             storage.save()
         except KeyError:
             print("** no instance found **")
@@ -238,7 +238,7 @@ class HBNBCommand(cmd.Cmd):
             if args not in classes:
                 print("** class doesn't exist **")
             else:
-                for v in storage.all(args).values():
+                for v in storage.all(classes[args]).values():
                     print_list.append(str(v))
         else:
             for v in storage.all().values():
