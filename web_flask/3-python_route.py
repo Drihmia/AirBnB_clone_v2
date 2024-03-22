@@ -19,7 +19,7 @@ hbnb = Flask(__name__)
 @hbnb.route("/", strict_slashes=False)
 def hello():
     """display “Hello HBNB!”"""
-    return "hello HBNB!"
+    return "Hello HBNB!"
 
 
 # task 1.
@@ -41,13 +41,9 @@ def c_text(text):
 @hbnb.route("/python/<text>", strict_slashes=False)
 def python_text(text="is cool"):
     """display “Python ”, followed by the value of the text variable"""
-    return "python {}".format(text.replace("_", " "))
-
-
-# task 3.
-
+    return "Python {}".format(text.replace("_", " "))
 
 
 if __name__ == "__main__":
     """entry point"""
-    hbnb.run()
+    hbnb.run(debug=True)

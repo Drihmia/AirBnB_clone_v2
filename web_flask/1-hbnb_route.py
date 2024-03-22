@@ -13,7 +13,7 @@ hbnb = Flask(__name__)
 @hbnb.route("/", strict_slashes=False)
 def hello():
     """display “Hello HBNB!”"""
-    return "hello HBNB!"
+    return "Hello HBNB!"
 
 
 # task 1.
