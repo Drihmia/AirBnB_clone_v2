@@ -11,7 +11,7 @@
             -> The default value of text is “is cool”
         -> /number/<n>: display “n is a number” only if n is an integer
         """
-from flask import Flask, escape
+from flask import Flask
 
 hbnb = Flask(__name__)
 
@@ -34,14 +34,14 @@ def hello_hbnb():
 @hbnb.route("/c/<text>", strict_slashes=False)
 def c_text(text):
     """display “C ” followed by the value of the text variable"""
-    return "C {}".format(escape(text).replace("_", " "))
+    return "C {}".format(text.replace("_", " "))
 
 
 # task 3.
 @hbnb.route("/python/<text>", strict_slashes=False)
 def python_text(text="is cool"):
     """display “Python ”, followed by the value of the text variable"""
-    return "python {}".format(escape(text).replace("_", " "))
+    return "python {}".format(text.replace("_", " "))
 
 
 # task 3.
