@@ -13,7 +13,7 @@
         -> /number_template/<n>: display a HTML page only if n is an integer:
             -> H1 tag: “Number: n” inside the tag BODY
         """
-from flask import Flask, render_template, escape
+from flask import Flask, render_template
 
 hbnb = Flask(__name__)
 
@@ -36,14 +36,14 @@ def hello_hbnb():
 @hbnb.route("/c/<text>", strict_slashes=False)
 def c_text(text):
     """display “C ” followed by the value of the text variable"""
-    return "C {}".format(escape(text).replace("_", " "))
+    return "C {}".format(text.replace("_", " "))
 
 
 # task 3.
 @hbnb.route("/python/<text>", strict_slashes=False)
 def python_text(text="is cool"):
     """display “Python ”, followed by the value of the text variable"""
-    return "python {}".format(escape(text).replace("_", " "))
+    return "python {}".format(text.replace("_", " "))
 
 
 # task 3.
@@ -57,7 +57,7 @@ def python_is_cool():
 @hbnb.route("/number/<int:n>", strict_slashes=False)
 def number_n(n):
     """display “n is a number” only if n is an integer"""
-    return "{} is a number".format(escape(n))
+    return "{} is a number".format(n)
 
 
 # task 5.
