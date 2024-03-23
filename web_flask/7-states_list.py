@@ -11,14 +11,16 @@ HBNB = Flask(__name__)
 # task 8.
 @HBNB.route("/states_list", strict_slashes=False)
 def states_list():
-    """states list that return a list of states using render template and jinja"""
+    """states list that return a list of states using 'render
+    template' and jinja"""
+
     states = storage.all(State)
     return render_template("7-states_list.html", States=states)
 
 
 # task 8.
 @HBNB.teardown_appcontext
-def storage_close(error=None):
+def teardown(error=None):
     """closing the storage and reload"""
     storage.close()
 
