@@ -20,7 +20,7 @@ def states_list():
     template' and jinja"""
 
     states = storage.all(State)
-    return render_template("7-states_list.html", States=states)
+    return render_template("7-states_list.html", states=states)
 
 
 if __name__ == "__main__":
