@@ -4,13 +4,16 @@
         <TITLE>HBNB</TITLE>
     </HEAD>
     <BODY>
-	<H1>States</H1>
-	<UL>
-	  {%+ for State in States.values()|sort(attribute='name', reverse=False) -%}
-	    {% if State.name.strip(" ") != "" %}
-	      <LI>{{ State.id }}: <B>{{ State.name }}</B></LI>
-	    {% endif %}
-	  {% endfor %}
+        <H1>States</H1>
+        <UL>
+        {% for State in States.values()|sort(attribute='name', reverse=False) %}
+	    <LI>{{ State.id }}: <B>{{ State.name }}</B></LI>
+	    <UL>
+	        {% for City in State.cities|sort(attribute='name', reverse=False) %}
+	        <LI>{{ City.id }}: <B>{{ City.name }}</B></LI>
+		    {% endfor %}
+	    </UL>
+	    {% endfor %}
 	</UL>
     </BODY>
 </HTML>
