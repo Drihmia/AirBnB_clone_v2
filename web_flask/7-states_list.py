@@ -20,11 +20,11 @@ def states_list():
 
 # task 8.
 @HBNB.teardown_appcontext
-def teardown(error=None):
+def teardown(error):
     """closing the storage and reload"""
     storage.close()
 
 
 if __name__ == "__main__":
     """Entry point"""
-    HBNB.run(host="0.0.0.0", port=5000)
+    HBNB.run(host="0.0.0.0", port=5000, debug=True)
