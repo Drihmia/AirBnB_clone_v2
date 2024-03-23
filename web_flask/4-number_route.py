@@ -38,17 +38,11 @@ def c_text(text):
 
 
 # task 3.
+@hbnb.route("/python/", strict_slashes=False, defaults={"text": "is cool"})
 @hbnb.route("/python/<text>", strict_slashes=False)
-def python_text(text="is cool"):
+def python_text(text):
     """display “Python ”, followed by the value of the text variable"""
     return "python {}".format(text.replace("_", " "))
-
-
-# task 3.
-@hbnb.route("/python/", strict_slashes=False)
-def python_is_cool():
-    """display “Python ”, followed by the value of the text variable"""
-    return "python is cool"
 
 
 # task 4.
