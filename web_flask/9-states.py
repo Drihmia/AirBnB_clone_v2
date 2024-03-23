@@ -44,4 +44,4 @@ def teardown(_=None):
 
 if __name__ == "__main__":
     """Entry point"""
-    HBNB.run(host="0.0.0.0", port=5000, debug=True)
+    HBNB.run(host="0.0.0.0", port=5000)
