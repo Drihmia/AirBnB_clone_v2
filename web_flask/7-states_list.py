@@ -9,7 +9,7 @@ HBNB = Flask(__name__)
 
 
 # task 8.
-@HBNB.route("/states_list", strict_slashes=False)
+@HBNB.route("/states_list/", strict_slashes=False)
 def states_list():
     """states list"""
     states = storage.all(State)
@@ -25,4 +25,4 @@ def storage_close(error=None):
 
 if __name__ == "__main__":
     """Entry point"""
-    HBNB.run(host="0.0.0.0", port=5000)
+    HBNB.run(host="0.0.0.0", port=5000, debug=True)
