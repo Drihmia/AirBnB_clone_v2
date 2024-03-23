@@ -7,7 +7,7 @@
 	<H1>States</H1>
 	<UL>
 	  {%+ for State in States.values()|sort(attribute='name', reverse=False) -%}
-	    {% if State.name != "" %}
+	    {% if State.name.strip(" ") != "" %}
 	      <LI>{{ State.id }}: <B>{{ State.name }}</B></LI>
 	    {% endif %}
 	  {% endfor %}

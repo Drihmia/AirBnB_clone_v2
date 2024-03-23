@@ -91,5 +91,4 @@ class DBStorage:
 
     def close(self):
         """method on the private session attribute (self.__session)"""
-        from sqlalchemy.orm import scoped_session
         self.__session.close()
