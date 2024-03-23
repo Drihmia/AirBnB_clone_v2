@@ -3,9 +3,14 @@
 from models import storage
 from models.state import State
 from flask import Flask, render_template
-
-
 HBNB = Flask(__name__)
+
+
+# task 8.
+@HBNB.teardown_appcontext
+def teardown(_=None):
+    """closing the storage and reload"""
+    storage.close()
 
 
 # task 8.
@@ -16,13 +21,6 @@ def states_list():
 
     states = storage.all(State)
     return render_template("7-states_list.html", States=states)
-
-
-# task 8.
-@HBNB.teardown_appcontext
-def teardown(error):
-    """closing the storage and reload"""
-    storage.close()
 
 
 if __name__ == "__main__":
