@@ -1,23 +1,10 @@
 #!/usr/bin/env python3
 """ Console Module """
 import cmd
-from models import storage
-from models.base_model import BaseModel
-from models.user import User
-from models.place import Place
-from models.state import State
-from models.city import City
-from models.amenity import Amenity
-from models.review import Review
-classes = {
-           'BaseModel': BaseModel, 'User': User, 'Place': Place,
-           'State': State, 'City': City, 'Amenity': Amenity,
-           'Review': Review
-           }
 
 
 class HBNBCommand(cmd.Cmd):
-    """ Contains the functionality for the HBNB console """
+    """ Contains the functionality for the HBNB console"""
 
     # determines prompt for interactive/non-interactive modes
     prompt = '(hbnb) '
@@ -111,6 +98,20 @@ class HBNBCommand(cmd.Cmd):
 
         ex: create User name="redouane"
         """
+        from models import storage
+        from models.base_model import BaseModel
+        from models.user import User
+        from models.place import Place
+        from models.state import State
+        from models.city import City
+        from models.amenity import Amenity
+        from models.review import Review
+        from os import environ
+        classes = {
+                   'BaseModel': BaseModel, 'User': User, 'Place': Place,
+                   'State': State, 'City': City, 'Amenity': Amenity,
+                   'Review': Review
+                   }
         # print(line)
         args = ""
         # new_instance = ""
@@ -163,7 +164,21 @@ class HBNBCommand(cmd.Cmd):
 
     def do_show(self, args):
         """ Method to show an individual object """
+        from models.base_model import BaseModel
+        from models.user import User
+        from models.place import Place
+        from models.state import State
+        from models.city import City
+        from models.amenity import Amenity
+        from models.review import Review
+        classes = {
+                   'BaseModel': BaseModel, 'User': User, 'Place': Place,
+                   'State': State, 'City': City, 'Amenity': Amenity,
+                   'Review': Review
+                   }
+        print("----", args)
         new = args.partition(" ")
+        print("----", new)
         c_name = new[0]
         c_id = new[2]
 
@@ -184,10 +199,9 @@ class HBNBCommand(cmd.Cmd):
             return
 
         key = c_name + "." + c_id
-
         try:
             from models import storage
-            [print(i) for i in storage.all(classes[key]).values()]
+            print(storage.all(c_name)[key])
         except KeyError:
             print("** no instance found **")
 
@@ -198,6 +212,19 @@ class HBNBCommand(cmd.Cmd):
 
     def do_destroy(self, args):
         """ Destroys a specified object """
+        from models.base_model import BaseModel
+        from models import storage
+        from models.user import User
+        from models.place import Place
+        from models.state import State
+        from models.city import City
+        from models.amenity import Amenity
+        from models.review import Review
+        classes = {
+                   'BaseModel': BaseModel, 'User': User, 'Place': Place,
+                   'State': State, 'City': City, 'Amenity': Amenity,
+                   'Review': Review
+                   }
         new = args.partition(" ")
         c_name = new[0]
         c_id = new[2]
@@ -219,7 +246,7 @@ class HBNBCommand(cmd.Cmd):
         key = c_name + "." + c_id
 
         try:
-            del(storage.all()[classes[key]])
+            del(storage.all()[key])
             storage.save()
         except KeyError:
             print("** no instance found **")
@@ -231,6 +258,19 @@ class HBNBCommand(cmd.Cmd):
 
     def do_all(self, args):
         """ Shows all objects, or all objects of a class"""
+        from models.base_model import BaseModel
+        from models import storage
+        from models.user import User
+        from models.place import Place
+        from models.state import State
+        from models.city import City
+        from models.amenity import Amenity
+        from models.review import Review
+        classes = {
+                   'BaseModel': BaseModel, 'User': User, 'Place': Place,
+                   'State': State, 'City': City, 'Amenity': Amenity,
+                   'Review': Review
+                   }
         print_list = []
 
         if args:
@@ -238,7 +278,7 @@ class HBNBCommand(cmd.Cmd):
             if args not in classes:
                 print("** class doesn't exist **")
             else:
-                for v in storage.all(classes[args]).values():
+                for v in storage.all(args).values():
                     print_list.append(str(v))
         else:
             for v in storage.all().values():
@@ -268,6 +308,19 @@ class HBNBCommand(cmd.Cmd):
 
     def do_update(self, args):
         """ Updates a certain object with new info """
+        from models.base_model import BaseModel
+        from models import storage
+        from models.user import User
+        from models.place import Place
+        from models.state import State
+        from models.city import City
+        from models.amenity import Amenity
+        from models.review import Review
+        classes = {
+                   'BaseModel': BaseModel, 'User': User, 'Place': Place,
+                   'State': State, 'City': City, 'Amenity': Amenity,
+                   'Review': Review
+                   }
         c_name = c_id = att_name = att_val = kwargs = ''
 
         # isolate cls from id/args, ex: (<cls>, delim, <id/args>)
