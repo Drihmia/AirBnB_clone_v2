@@ -176,9 +176,7 @@ class HBNBCommand(cmd.Cmd):
                    'State': State, 'City': City, 'Amenity': Amenity,
                    'Review': Review
                    }
-        print("----", args)
         new = args.partition(" ")
-        print("----", new)
         c_name = new[0]
         c_id = new[2]
 
@@ -201,7 +199,7 @@ class HBNBCommand(cmd.Cmd):
         key = c_name + "." + c_id
         try:
             from models import storage
-            print(storage.all(c_name)[key])
+            print(storage.all(classes[c_name])[key])
         except KeyError:
             print("** no instance found **")
 
@@ -278,7 +276,7 @@ class HBNBCommand(cmd.Cmd):
             if args not in classes:
                 print("** class doesn't exist **")
             else:
-                for v in storage.all(args).values():
+                for v in storage.all(classes[args]).values():
                     print_list.append(str(v))
         else:
             for v in storage.all().values():
