@@ -184,7 +184,7 @@ class HBNBCommand(cmd.Cmd):
             return
 
         key = c_name + "." + c_id
-        
+
         try:
             from models import storage
             [print(i) for i in storage.all(classes[key]).values()]

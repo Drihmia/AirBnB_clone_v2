@@ -16,12 +16,11 @@ HBNB.static_folder = 'static'
 def states():
     """states list that return a list of states using 'render
     template' and jinja"""
-    
+
     states = storage.all(State)
     amenities = storage.all(Amenity)
     return render_template("10-hbnb_filters.html",
                            states=states, amenities=amenities)
-
 
 
 # task 11.
