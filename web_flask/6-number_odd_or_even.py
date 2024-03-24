@@ -72,6 +72,13 @@ def number_odd_or_even_n(n):
     return render_template("6-number_odd_or_even.html", n=n)
 
 
+@hbnb.route("/index", strict_slashes=False)
+def index_page():
+    """Return the indexing page to browse all those path from
+    one page"""
+    return render_template("index.html")
+
+
 if __name__ == "__main__":
     """entry point"""
     hbnb.run(debug=True)
