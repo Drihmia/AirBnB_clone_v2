@@ -11,9 +11,9 @@ class State(BaseModel, Base):
     __tablename__ = "states"
 
     if environ.get("HBNB_TYPE_STORAGE") == "db":
-        name = Column(String(128), nullable=False)
         cities = relationship("City", backref="state",
                               cascade="all, delete-orphan")
+        name = Column(String(128), nullable=False)
     else:
         name = ""
 
