@@ -3,7 +3,7 @@
 from fabric.api import run, put, env, cd
 from os import path
 
-env.hosts = ["100.26.168.177", "54.237.107.28"]
+env.hosts = ["34.207.120.158", "54.237.107.28"]
 # , "54.237.107.28"
 env.user = "ubuntu"
 env.key_filename = "~/.ssh/school"
@@ -36,7 +36,7 @@ def do_deploy(archive_path):
     put(archive_path, "/tmp")
 
     # creating the path if it does not exist.
-    run_mkdir_cmd = f"mkdir -p {path_target}"
+    run_mkdir_cmd = f"sudo mkdir -p {path_target}"
     run(run_mkdir_cmd)
     run("sudo chown -R ubuntu:ubuntu /data/")
 
